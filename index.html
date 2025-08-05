@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KrMarket</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>KrMarket</h1>
+    <nav>
+      <a href="#celulares">Celulares</a>
+      <a href="#vapers">Vapers</a>
+      <a href="#carrito">Carrito</a>
+    </nav>
+  </header>
+
+  <section class="products" id="celulares">
+    <h2>Celulares</h2>
+    <div id="celulares-container"></div>
+  </section>
+
+  <section class="products" id="vapers">
+    <h2>Vapers</h2>
+    <div id="vapers-container"></div>
+  </section>
+
+  <section id="carrito">
+    <h2>Carrito de compras</h2>
+    <ul id="cart-items"></ul>
+    <p>Total: $<span id="cart-total">0</span></p>
+    <button onclick="checkout()">Pagar con MercadoPago</button>
+  </section>
+
+  <a class="whatsapp-btn" href="https://wa.me/549XXXXXXXXXX" target="_blank">💬 Consultanos</a>
+
+  <script>
+    let cart = [];
+
+    function addToCart(button) {
+      const product = button.closest(".product");
+      const name = product.getAttribute("data-name");
+      const price = parseFloat(product.getAttribute("data-price"));
+      cart.push({ name, price });
+      updateCart();
+    }
+
+    function updateCart() {
+      const list = document.getElementById("cart-items");
+      list.innerHTML = "";
+      let total = 0;
+      cart.forEach((item) => {
+        total += item.price;
+        const li = document.createElement("li");
+        li.textContent = item.name + " - $" + item.price.toLocaleString();
+        list.appendChild(li);
+      });
+      document.getElementById("cart-total").textContent = total.toLocaleString();
+    }
+
+    function checkout() {
+      const mpUrl = "https://www.mercadopago.com.ar";
+      window.open(mpUrl, "_blank");
+    }
+
+    async function loadProducts() {
+      try {
+        const res = await fetch("https://sheetdb.io/api/v1/oh4e3mck5sq4o");
+        const data = await res.json();
+
+        const celulares = document.getElementById("celulares-container");
+        const vapers = document.getElementById("vapers-container");
+
+        data.forEach(item => {
+          const div = document.createElement("div");
+          div.className = "product";
+          div.setAttribute("data-name", item.nombre);
+          div.setAttribute("data-price", item.precio);
+          div.innerHTML = `
+            <img src="${item.imagen}" alt="${item.nombre}">
+            <h3>${item.nombre}</h3>
+            <p>$${parseInt(item.precio).toLocaleString()}</p>
+            <button onclick="addToCart(this)">Agregar al carrito</button>
+          `;
+          if (item.categoria.toLowerCase() === "celulares") {
+            celulares.appendChild(div);
+          } else if (item.categoria.toLowerCase() === "vapers") {
+            vapers.appendChild(div);
+          }
+        });
+      } catch (err) {
+        console.error("Error al cargar productos:", err);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadProducts);
+  </script>
+</body>
+</html>
