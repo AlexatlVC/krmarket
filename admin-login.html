@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - KrMarket Admin</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .login-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+    input, button {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-container">
+  <h2>Acceso al panel</h2>
+  <input type="password" id="password" placeholder="Contraseña" />
+  <button onclick="login()">Entrar</button>
+  <p id="msg" style="color: red; margin-top: 1rem;"></p>
+</div>
+
+<script>
+  function login() {
+    const input = document.getElementById("password").value;
+    const msg = document.getElementById("msg");
+    if (input === "kradmin2025") {
+      window.location.href = "admin-gsheet.html";
+    } else {
+      msg.textContent = "Contraseña incorrecta";
+    }
+  }
+</script>
+
+</body>
+</html>
