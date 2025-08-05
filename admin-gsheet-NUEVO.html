@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel de Carga - KrMarket</title>
+  <style>
+    body {{
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background: #f4f4f4;
+    }}
+    form {{
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }}
+    input, select, button {{
+      width: 100%;
+      padding: 0.7rem;
+      margin-bottom: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }}
+    h1 {{
+      text-align: center;
+      margin-bottom: 2rem;
+    }}
+    #message {{
+      text-align: center;
+      font-weight: bold;
+      margin-top: 1rem;
+    }}
+  </style>
+</head>
+<body>
+
+  <form id="productForm">
+    <h1>Agregar Producto a KrMarket</h1>
+    <input type="text" id="nombre" placeholder="Nombre del producto" required />
+    <input type="number" id="precio" placeholder="Precio en ARS" required />
+    <input type="url" id="imagen" placeholder="URL de la imagen" required />
+    <select id="categoria" required>
+      <option value="" disabled selected>Seleccioná una categoría</option>
+      <option value="celulares">Celulares</option>
+      <option value="vapers">Vapers</option>
+    </select>
+    <button type="submit">Agregar</button>
+    <p id="message"></p>
+  </form>
+
+  <script>
+    const form = document.getElementById("productForm");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", async (e) => {{
+      e.preventDefault();
+
+      const data = {{
+        nombre: document.getElementById("nombre").value,
+        precio: document.getElementById("precio").value,
+        imagen: document.getElementById("imagen").value,
+        categoria: document.getElementById("categoria").value
+      }};
+
+      message.textContent = "Enviando...";
+
+      try {{
+        const response = await fetch("https://sheetdb.io/api/v1/oh4e3mck5sq4o", {{
+          method: "POST",
+          headers: {{
+            "Content-Type": "application/json"
+          }},
+          body: JSON.stringify({{ data }})
+        }});
+
+        if (response.ok) {{
+          message.textContent = "✅ Producto agregado correctamente";
+          form.reset();
+        }} else {{
+          message.textContent = "❌ Error al agregar el producto";
+        }}
+      }} catch (error) {{
+        console.error(error);
+        message.textContent = "❌ Error de conexión";
+      }}
+    }});
+  </script>
+
+</body>
+</html>
