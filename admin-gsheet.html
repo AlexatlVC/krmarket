@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin KrMarket</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    form {
+      background: #fff;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    #message {
+      text-align: center;
+      margin-top: 15px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Panel de Productos - KrMarket</h1>
+  <form id="productForm">
+    <input type="text" id="nombre" placeholder="Nombre del producto" required />
+    <input type="number" id="precio" placeholder="Precio en ARS" required />
+    <input type="text" id="imagen" placeholder="URL de la imagen" required />
+    <select id="categoria">
+      <option value="celulares">Celulares</option>
+      <option value="vapers">Vapers</option>
+    </select>
+    <button type="submit">Agregar producto</button>
+    <div id="message"></div>
+  </form>
+
+  <script>
+    const form = document.getElementById('productForm');
+    const message = document.getElementById('message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nombre = document.getElementById('nombre').value;
+      const precio = document.getElementById('precio').value;
+      const imagen = document.getElementById('imagen').value;
+      const categoria = document.getElementById('categoria').value;
+
+      const data = {
+        data: {
+          nombre, precio, imagen, categoria
+        }
+      };
+
+      try {
+        const res = await fetch('https://sheetdb.io/api/v1/gq8j7tenqoo6w', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (res.ok) {
+          message.textContent = '✅ Producto cargado correctamente';
+          form.reset();
+        } else {
+          message.textContent = '❌ Error al cargar el producto';
+        }
+      } catch (err) {
+        message.textContent = '❌ Error al conectar con la API';
+      }
+    });
+  </script>
+</body>
+</html>
